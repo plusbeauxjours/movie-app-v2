@@ -1,10 +1,12 @@
-import React from 'react';
-import {SafeAreaView, View} from 'react-native';
+import React from "react";
+import { SafeAreaView, Text, View } from "react-native";
 
 const App = () => {
   return (
     <SafeAreaView>
-      <View style={{backgroundColor: 'white'}}>APP</View>
+      <View style={{ backgroundColor: "white" }}>
+        <Text>APP</Text>
+      </View>
     </SafeAreaView>
   );
 };
