@@ -1,14 +1,20 @@
 import React from "react";
-import { SafeAreaView, Text, View } from "react-native";
+import { SafeAreaView, StatusBar, StyleSheet, Text, View } from "react-native";
 
-const App = () => {
+export default function App() {
   return (
-    <SafeAreaView>
-      <View style={{ backgroundColor: "white" }}>
-        <Text>APP</Text>
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text>Open up App.js to start working on your app!</Text>
+      <StatusBar barStyle="default" />
+    </View>
   );
-};
+}
 
-export default App;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
