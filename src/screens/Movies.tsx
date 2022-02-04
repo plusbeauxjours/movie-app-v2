@@ -1,9 +1,22 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { WHITE_COLOR } from "../styles/colors";
 
-const Movies = () => (
-  <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+interface IProps {}
+
+const Movies: React.FC<IProps> = () => (
+  <View style={styles.container}>
     <Text>Movies</Text>
   </View>
 );
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: WHITE_COLOR,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+
 export default Movies;
