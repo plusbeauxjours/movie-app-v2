@@ -1,12 +1,12 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import Stack from "./src/navigation/Stack";
+import Root from "./src/navigation/Root";
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack />
+      <Root />
     </NavigationContainer>
   );
 }

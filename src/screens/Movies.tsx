@@ -1,16 +1,23 @@
+import { ParamListBase } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import { WHITE_COLOR } from "../styles/colors";
 
-interface IProps {}
+interface IProps {
+  navigation: StackNavigationProp<ParamListBase>;
+}
 
-const Movies: React.FC<IProps> = () => (
-  <View style={styles.container}>
+const Movies: React.FC<IProps> = ({ navigation }) => (
+  <TouchableOpacity
+    onPress={() => navigation.navigate("Stack", { screen: "Three" })}
+    style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+  >
     <Text>Movies</Text>
-  </View>
+  </TouchableOpacity>
 );
 
-const styles = StyleSheet.create({
+const stylTouchableOpacitys = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: WHITE_COLOR,

@@ -21,22 +21,17 @@ const ScreenTwo: React.FC<IProps> = ({ navigation }) => (
   </TouchableOpacity>
 );
 const ScreenThree: React.FC<IProps> = ({ navigation }) => (
-  <TouchableOpacity onPress={() => navigation.setOptions({ title: "Hello!" })}>
-    <Text>Change title</Text>
+  <TouchableOpacity
+    onPress={() => navigation.navigate("Tabs", { screen: "Search" })}
+  >
+    <Text>Go to search</Text>
   </TouchableOpacity>
 );
 
 const NativeStack = createNativeStackNavigator();
 
 const Stack = () => (
-  <NativeStack.Navigator
-    screenOptions={{
-      presentation: "modal",
-      animation: "fade",
-      headerTintColor: YELLOW_COLOR,
-      headerBackTitleVisible: false,
-    }}
-  >
+  <NativeStack.Navigator screenOptions={{ headerBackTitleVisible: false }}>
     <NativeStack.Screen name="One" component={ScreenOne} />
     <NativeStack.Screen name="Two" component={ScreenTwo} />
     <NativeStack.Screen name="Three" component={ScreenThree} />
