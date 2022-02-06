@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from "react";
-import { Dimensions, FlatList, View } from "react-native";
+import React, { useCallback } from "react";
+import { Dimensions, FlatList } from "react-native";
 
-import { useQuery, useQueryClient } from "react-query";
-import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
+import styled from "styled-components/native";
+import { useQuery, useQueryClient } from "react-query";
 import { ParamListBase } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -11,6 +11,8 @@ import { moviesApi } from "../api";
 import Slide from "../components/Slide";
 import HMedia from "../components/HMedia";
 import VMedia from "../components/VMedia";
+
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 interface IProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -50,29 +52,32 @@ const HSeparator = styled.View`
 `;
 
 const Movies: React.FC<IProps> = ({ navigation }) => {
-  const [refreshing, setRefreshing] = useState<boolean>(false);
   const queryClient = useQueryClient();
 
-  const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-  const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
-    ["movies", "nowPlaying"],
-    moviesApi.nowPlaying
-  );
-  const { isLoading: trendingLoading, data: trendingData } = useQuery(
-    ["movies", "trending"],
-    moviesApi.trending
-  );
-  const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
-    ["movies", "upcoming"],
-    moviesApi.upcoming
-  );
-  const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
+  const {
+    isLoading: nowPlayingLoading,
+    data: nowPlayingData,
+    isRefetching: isRefetchingNowPlaying,
+  } = useQuery(["movies", "nowPlaying"], moviesApi.nowPlaying);
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await queryClient.refetchQueries(["movies"]);
-    setRefreshing(false);
-  };
+  const {
+    isLoading: upcomingLoading,
+    data: upcomingData,
+    isRefetching: isRefetchingUpcoming,
+  } = useQuery(["movies", "upcoming"], moviesApi.upcoming);
+
+  const {
+    isLoading: trendingLoading,
+    data: trendingData,
+    isRefetching: isRefetchingTrending,
+  } = useQuery(["movies", "trending"], moviesApi.trending);
+
+  const movieKeyExtractor = (item) => item.id + "";
+  const onRefresh = async () => queryClient.refetchQueries(["movies"]);
+
+  const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
+  const refreshing =
+    isRefetchingNowPlaying || isRefetchingUpcoming || isRefetchingTrending;
 
   const renderVMedia = useCallback(
     ({ item }) => (
@@ -96,8 +101,6 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
     ),
     []
   );
-
-  const movieKeyExtractor = (item) => item.id + "";
 
   const ListHeaderComponent = useCallback(
     () => (
