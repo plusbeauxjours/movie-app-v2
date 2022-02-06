@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
-    "rootDir": ".",
     /* Additional Options 0315*/
     "noImplicitReturns": false,
     "noImplicitThis": false,
@@ -33,7 +31,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*", "App.tsx"],
+  "include": ["src/**/*", "App.tsx", "styled.ts", "styled-components.d.ts"],
   "exclude": [
     "typings",
     "**/__generated__/**",
