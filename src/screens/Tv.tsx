@@ -1,28 +1,59 @@
 import React from "react";
 
-import styled from "styled-components/native";
 import { ParamListBase } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useQuery, useQueryClient } from "react-query";
+import { tvApi } from "../api";
+import { RefreshControl, ScrollView } from "react-native";
+import Loader from "../components/Loader";
+import HList from "../components/HList";
 
 interface IProps {
   navigation: StackNavigationProp<ParamListBase>;
 }
 
-const Container = styled.View`
-  flex: 1;
-  background-color: ${(props) => props.theme.mainBgColor};
-  justify-content: center;
-  align-items: center;
-`;
+const Tv: React.FC<IProps> = () => {
+  const queryClient = useQueryClient();
+  const {
+    isLoading: todayLoading,
+    data: todayData,
+    isRefetching: todayRefetching,
+  } = useQuery(["tv", "today"], tvApi.airingToday);
 
-const Title = styled.Text`
-  color: ${(props) => props.theme.textColor};
-`;
+  const {
+    isLoading: topLoading,
+    data: topData,
+    isRefetching: topRefetching,
+  } = useQuery(["tv", "top"], tvApi.topRated);
 
-const Tv: React.FC<IProps> = ({ navigation }) => (
-  <Container>
-    <Title>Tv</Title>
-  </Container>
-);
+  const {
+    isLoading: trendingLoading,
+    data: trendingData,
+    isRefetching: trendingRefetching,
+  } = useQuery(["tv", "trending"], tvApi.trending);
+
+  const onRefresh = () => {
+    queryClient.refetchQueries(["tv"]);
+  };
+
+  const loading = todayLoading || topLoading || trendingLoading;
+  const refreshing = todayRefetching || topRefetching || trendingRefetching;
+
+  if (loading) {
+    return <Loader />;
+  }
+  return (
+    <ScrollView
+      contentContainerStyle={{ paddingVertical: 30 }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <HList title="Trending TV" data={trendingData.results} />
+      <HList title="Airing Today" data={todayData.results} />
+      <HList title="Top Rated TV" data={topData.results} />
+    </ScrollView>
+  );
+};
 
 export default Tv;
