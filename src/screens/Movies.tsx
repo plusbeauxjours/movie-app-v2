@@ -41,8 +41,12 @@ const ComingSoonTitle = styled(ListTitle)`
   margin-bottom: 30px;
 `;
 
+const VSeparator = styled.View`
+  width: 20px;
+`;
+
 const HSeparator = styled.View`
-  height: 20px;
+  width: 20px;
 `;
 
 const Movies: React.FC<IProps> = ({ navigation }) => {
@@ -69,6 +73,31 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
     await queryClient.refetchQueries(["movies"]);
     setRefreshing(false);
   };
+
+  const renderVMedia = useCallback(
+    ({ item }) => (
+      <VMedia
+        posterPath={item.poster_path}
+        originalTitle={item.original_title}
+        voteAverage={item.vote_average}
+      />
+    ),
+    []
+  );
+
+  const renderHMedia = useCallback(
+    ({ item }) => (
+      <HMedia
+        posterPath={item.poster_path}
+        originalTitle={item.original_title}
+        overview={item.overview}
+        releaseDate={item.release_date}
+      />
+    ),
+    []
+  );
+
+  const movieKeyExtractor = (item) => item.id + "";
 
   const ListHeaderComponent = useCallback(
     () => (
@@ -102,17 +131,11 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
           <TrendingFlatList
             data={trendingData?.results}
             horizontal
-            keyExtractor={(item: any) => item.id + ""}
+            keyExtractor={movieKeyExtractor}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 30 }}
-            ItemSeparatorComponent={() => <View style={{ width: 30 }} />}
-            renderItem={({ item }: any) => (
-              <VMedia
-                posterPath={item.poster_path}
-                originalTitle={item.original_title}
-                voteAverage={item.vote_average}
-              />
-            )}
+            ItemSeparatorComponent={VSeparator}
+            renderItem={renderVMedia}
           />
         </ListContainer>
         <ComingSoonTitle>Coming soon</ComingSoonTitle>
@@ -129,17 +152,9 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
       refreshing={refreshing}
       ListHeaderComponent={ListHeaderComponent}
       data={upcomingData?.results}
-      keyExtractor={(item) => item.id + ""}
+      keyExtractor={movieKeyExtractor}
       ItemSeparatorComponent={HSeparator}
-      renderItem={({ item }) => (
-        <HMedia
-          key={item.id}
-          posterPath={item.poster_path}
-          originalTitle={item.original_title}
-          overview={item.overview}
-          releaseDate={item.release_date}
-        />
-      )}
+      renderItem={renderHMedia}
     />
   );
 };
