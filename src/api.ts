@@ -136,12 +136,14 @@ interface MovieFetchers {
   trending: MovieListResponse;
   upcoming: MovieListResponse;
   nowPlaying: MovieListResponse;
+  search: MovieListResponse;
 }
 
 interface TVFetchers {
   trending: TVListResponse;
   airingToday: TVListResponse;
   topRated: TVListResponse;
+  search: TVListResponse;
 }
 
 export const moviesApi: MovieFetchers = {
@@ -157,6 +159,12 @@ export const moviesApi: MovieFetchers = {
     fetch(
       `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`
     ).then((res) => res.json()),
+  search: ({ queryKey }) => {
+    const [_, query] = queryKey;
+    return fetch(
+      `${BASE_URL}/search/movie?api_key=${API_KEY}&language=en-US&page=1&query=${query}`
+    ).then((res) => res.json());
+  },
 };
 
 export const tvApi: TVFetchers = {
@@ -172,4 +180,10 @@ export const tvApi: TVFetchers = {
     fetch(`${BASE_URL}/tv/top_rated?api_key=${API_KEY}`).then((res) =>
       res.json()
     ),
+  search: ({ queryKey }) => {
+    const [_, query] = queryKey;
+    return fetch(
+      `${BASE_URL}/search/tv?api_key=${API_KEY}&language=en-US&page=1&query=${query}`
+    ).then((res) => res.json());
+  },
 };

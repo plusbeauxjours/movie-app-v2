@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Dimensions, FlatList } from "react-native";
 
 import Swiper from "react-native-swiper";
@@ -37,32 +37,32 @@ const HSeparator = styled.View`
 `;
 
 const Movies: React.FC<IProps> = ({ navigation }) => {
+  const [refreshing, setRefreshing] = useState(false);
   const queryClient = useQueryClient();
 
-  const {
-    isLoading: nowPlayingLoading,
-    data: nowPlayingData,
-    isRefetching: isRefetchingNowPlaying,
-  } = useQuery(["movies", "nowPlaying"], moviesApi.nowPlaying);
+  const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
+    ["movies", "nowPlaying"],
+    moviesApi.nowPlaying
+  );
 
-  const {
-    isLoading: upcomingLoading,
-    data: upcomingData,
-    isRefetching: isRefetchingUpcoming,
-  } = useQuery(["movies", "upcoming"], moviesApi.upcoming);
+  const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
+    ["movies", "upcoming"],
+    moviesApi.upcoming
+  );
 
-  const {
-    isLoading: trendingLoading,
-    data: trendingData,
-    isRefetching: isRefetchingTrending,
-  } = useQuery(["movies", "trending"], moviesApi.trending);
+  const { isLoading: trendingLoading, data: trendingData } = useQuery(
+    ["movies", "trending"],
+    moviesApi.trending
+  );
 
-  const movieKeyExtractor = (item) => item.id + "";
-  const onRefresh = async () => queryClient.refetchQueries(["movies"]);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await queryClient.refetchQueries(["tv"]);
+    setRefreshing(false);
+  };
 
   const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
-  const refreshing =
-    isRefetchingNowPlaying || isRefetchingUpcoming || isRefetchingTrending;
+  const movieKeyExtractor = (item) => item.id + "";
 
   const renderHMedia = useCallback(
     ({ item }) => (
