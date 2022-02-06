@@ -3,6 +3,7 @@ import { useColorScheme } from "react-native";
 
 import Feather from "react-native-vector-icons/Feather";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import {
   BLACK_COLOR,
   DARK_GREY,
@@ -10,7 +11,6 @@ import {
   WHITE_COLOR,
   YELLOW_COLOR,
 } from "../styles/colors";
-
 import Movies from "../screens/Movies";
 import Tv from "../screens/Tv";
 import Search from "../screens/Search";

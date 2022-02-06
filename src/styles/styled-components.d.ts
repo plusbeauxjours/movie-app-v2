@@ -1,4 +1,4 @@
-import "styled-components";
+import "styled-components/Native";
 
 declare module "styled-components" {
   export interface DefaultTheme {
