@@ -1,6 +1,7 @@
 import React from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, TouchableWithoutFeedback } from "react-native";
 
+import { useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
 
 import Poster from "./Poster";
@@ -52,24 +53,30 @@ const HMedia: React.FC<IProps> = ({
   releaseDate,
   voteAverage,
 }) => {
+  const navigation = useNavigation();
+  const goToDetail = () =>
+    navigation.navigate(Routes.Stack as never, { screen: "Detail" } as never);
+
   return (
-    <HMovie>
-      <Poster path={posterPath} />
-      <HColumn>
-        <Title numberOfLines={1}>{originalTitle}</Title>
-        {releaseDate && (
-          <Release>
-            {new Date(releaseDate).toLocaleDateString("ko", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </Release>
-        )}
-        {voteAverage && <Votes votes={voteAverage} />}
-        <Overview numberOfLines={5}>{overview}</Overview>
-      </HColumn>
-    </HMovie>
+    <TouchableWithoutFeedback onPress={goToDetail}>
+      <HMovie>
+        <Poster path={posterPath} />
+        <HColumn>
+          <Title numberOfLines={1}>{originalTitle}</Title>
+          {releaseDate && (
+            <Release>
+              {new Date(releaseDate).toLocaleDateString("ko", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </Release>
+          )}
+          {voteAverage && <Votes votes={voteAverage} />}
+          <Overview numberOfLines={5}>{overview}</Overview>
+        </HColumn>
+      </HMovie>
+    </TouchableWithoutFeedback>
   );
 };
 

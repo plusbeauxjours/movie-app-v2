@@ -1,6 +1,7 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 
+import { useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
 
 import { makeImgPath } from "../utils";
@@ -53,22 +54,28 @@ const Slide: React.FC<IProps> = ({
   voteAverage,
   overview,
 }) => {
+  const navigation = useNavigation();
+  const goToDetail = () =>
+    navigation.navigate(Routes.Stack as never, { screen: "Detail" } as never);
+
   return (
-    <View style={{ flex: 1 }}>
-      <BgImg
-        style={StyleSheet.absoluteFill}
-        source={{ uri: makeImgPath(backdropPath) }}
-        blurRadius={4}
-      />
-      <Wrapper>
-        <Poster path={posterPath} />
-        <Column>
-          <Title numberOfLines={1}>{originalTitle}</Title>
-          {voteAverage > 0 ? <Votes>⭐️ {voteAverage}/10</Votes> : null}
-          <Overview numberOfLines={4}>{overview}</Overview>
-        </Column>
-      </Wrapper>
-    </View>
+    <TouchableWithoutFeedback onPress={goToDetail}>
+      <View style={{ flex: 1 }}>
+        <BgImg
+          style={StyleSheet.absoluteFill}
+          source={{ uri: makeImgPath(backdropPath) }}
+          blurRadius={4}
+        />
+        <Wrapper>
+          <Poster path={posterPath} />
+          <Column>
+            <Title numberOfLines={1}>{originalTitle}</Title>
+            {voteAverage > 0 ? <Votes>⭐️ {voteAverage}/10</Votes> : null}
+            <Overview numberOfLines={4}>{overview}</Overview>
+          </Column>
+        </Wrapper>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
