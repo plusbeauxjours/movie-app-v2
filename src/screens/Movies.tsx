@@ -9,6 +9,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import { moviesApi } from "../api";
 import Slide from "../components/Slide";
+import Poster from "../components/Poster";
 
 interface IProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -25,10 +26,32 @@ const Loader = styled.View`
   align-items: center;
 `;
 
-const Overview = styled.Text<{ isDark: boolean }>`
-  margin-top: 10px;
-  color: ${(props) =>
-    props.isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(0, 0, 0, 0.8)"};
+const ListTitle = styled.Text`
+  color: ${(props) => props.theme.textColor};
+  font-size: 18px;
+  font-weight: 600;
+  margin-left: 30px;
+`;
+
+const TrendingScroll = styled.ScrollView`
+  margin-top: 20px;
+`;
+
+const Movie = styled.View`
+  margin-right: 20px;
+  align-items: center;
+`;
+
+const Title = styled.Text`
+  width: 100px;
+  color: ${(props) => props.theme.textColor};
+  font-weight: 600;
+  margin-top: 7px;
+  margin-bottom: 5px;
+`;
+const Votes = styled.Text`
+  color: ${(props) => props.theme.textColor};
+  font-size: 10px;
 `;
 
 const Movies: React.FC<IProps> = ({ navigation }) => {
@@ -37,7 +60,11 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
     ["movies", "nowPlaying"],
     moviesApi.nowPlaying
   );
-  const loading = nowPlayingLoading;
+  const { isLoading: trendingLoading, data: trendingData } = useQuery(
+    ["movies", "trending"],
+    moviesApi.trending
+  );
+  const loading = nowPlayingLoading || trendingLoading;
   return loading ? (
     <Loader />
   ) : (
@@ -49,7 +76,11 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
         autoplayTimeout={3.5}
         showsButtons={false}
         showsPagination={false}
-        containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4 }}
+        containerStyle={{
+          marginBottom: 30,
+          width: "100%",
+          height: SCREEN_HEIGHT / 4,
+        }}
       >
         {nowPlayingData?.results.map((movie) => (
           <Slide
@@ -62,6 +93,20 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
           />
         ))}
       </Swiper>
+      <ListTitle>Trending Movies</ListTitle>
+      <TrendingScroll
+        contentContainerStyle={{ paddingLeft: 30 }}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      >
+        {trendingData?.results.map((movie) => (
+          <Movie key={movie.id}>
+            <Poster path={movie.poster_path} />
+            <Title numberOfLines={1}>{movie.title}</Title>
+            <Votes>⭐️ {movie.vote_average}/10</Votes>
+          </Movie>
+        ))}
+      </TrendingScroll>
     </Container>
   );
 };

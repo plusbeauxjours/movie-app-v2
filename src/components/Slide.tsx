@@ -5,12 +5,13 @@ import { makeImgPath } from "../utils";
 import Poster from "./Poster";
 
 const BgImg = styled.Image`
-<opacity:0 className="8"></opacity:0>`;
+  opacity: 0.8;
+`;
 
-const Title = styled.Text<{ isDark: boolean }>`
+const Title = styled.Text`
   font-size: 16px;
   font-weight: 600;
-  color: ${(props) => (props.isDark ? "white" : props.theme.textColor)};
+  color: ${(props) => props.theme.textColor};
 `;
 
 const Wrapper = styled.View`
@@ -26,10 +27,9 @@ const Column = styled.View`
   width: 60%;
 `;
 
-const Overview = styled.Text<{ isDark: boolean }>`
+const Overview = styled.Text`
   margin-top: 10px;
-  color: ${(props) =>
-    props.isDark ? "rgba(255, 255, 255, 0.8)" : "rgba(0, 0, 0, 0.8)"};
+  color: ${(props) => props.theme.textColor};
 `;
 
 const Votes = styled(Overview)`
@@ -51,7 +51,6 @@ const Slide: React.FC<SlideProps> = ({
   voteAverage,
   overview,
 }) => {
-  const isDark = useColorScheme() === "dark";
   return (
     <View style={{ flex: 1 }}>
       <BgImg
@@ -62,11 +61,9 @@ const Slide: React.FC<SlideProps> = ({
       <Wrapper>
         <Poster path={posterPath} />
         <Column>
-          <Title isDark={isDark}>{originalTitle}</Title>
-          {voteAverage > 0 ? (
-            <Votes isDark={isDark}>⭐️ {voteAverage}/10</Votes>
-          ) : null}
-          <Overview isDark={isDark}>{overview.slice(0, 100)}...</Overview>
+          <Title numberOfLines={1}>{originalTitle}</Title>
+          {voteAverage > 0 ? <Votes>⭐️ {voteAverage}/10</Votes> : null}
+          <Overview numberOfLines={4}>{overview}</Overview>
         </Column>
       </Wrapper>
     </View>
