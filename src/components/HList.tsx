@@ -2,11 +2,12 @@ import React, { useCallback } from "react";
 import { FlatList } from "react-native-gesture-handler";
 
 import styled from "styled-components/native";
+import { Movie, TV } from "../api";
 import VMedia from "./VMedia";
 
 interface IProps {
   title: string;
-  data: any[];
+  data: Movie[] | TV[];
 }
 
 const ListContainer = styled.View`
@@ -27,10 +28,12 @@ export const HListSeparator = styled.View`
 
 const HList: React.FC<IProps> = ({ title, data }) => {
   const renderVMedia = useCallback(
-    ({ item }) => (
+    ({ item }: { item: Movie | TV }) => (
       <VMedia
-        posterPath={item.poster_path}
-        originalTitle={item.original_title}
+        posterPath={item.poster_path || ""}
+        originalTitle={
+          "original_title" in item ? item.original_title : item.original_name
+        }
         voteAverage={item.vote_average}
       />
     ),
@@ -40,13 +43,13 @@ const HList: React.FC<IProps> = ({ title, data }) => {
   return (
     <ListContainer>
       <ListTitle numberOfLines={1}>{title}</ListTitle>
-      <FlatList
+      <FlatList<Movie | TV>
         data={data}
         horizontal
         showsHorizontalScrollIndicator={false}
         ItemSeparatorComponent={HListSeparator}
         contentContainerStyle={{ paddingHorizontal: 30 }}
-        keyExtractor={(item) => item.id + ""}
+        keyExtractor={(item: Movie | TV) => item.id + ""}
         renderItem={renderVMedia}
       />
     </ListContainer>

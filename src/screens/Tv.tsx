@@ -50,9 +50,11 @@ const Tv: React.FC<IProps> = () => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <HList title="Trending TV" data={trendingData.results} />
-      <HList title="Airing Today" data={todayData.results} />
-      <HList title="Top Rated TV" data={topData.results} />
+      {trendingData && (
+        <HList title="Trending TV" data={trendingData.results} />
+      )}
+      {todayData && <HList title="Airing Today" data={todayData.results} />}
+      {topData && <HList title="Top Rated TV" data={topData.results} />}
     </ScrollView>
   );
 };

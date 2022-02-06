@@ -6,6 +6,7 @@ import styled from "styled-components/native";
 
 import Poster from "./Poster";
 import Votes from "./Votes";
+import { Routes } from "../navigation/Root";
 
 const HMovie = styled.View`
   padding: 0px 30px;
