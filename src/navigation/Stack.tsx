@@ -4,7 +4,6 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ParamListBase } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { YELLOW_COLOR } from "../styles/colors";
 
 interface IProps {
   navigation: StackNavigationProp<ParamListBase>;

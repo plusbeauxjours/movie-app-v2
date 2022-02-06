@@ -1,29 +1,41 @@
 import { ParamListBase } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import { WHITE_COLOR } from "../styles/colors";
+import styled from "styled-components/native";
+
+interface ISelected {
+  selected: string;
+}
+
+const Container = styled.View`
+  flex: 1;
+  background-color: ${WHITE_COLOR};
+  justify-content: center;
+  align-items: center;
+`;
+
+const Btn = styled.TouchableOpacity`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Title = styled.Text<ISelected>`
+  color: ${(props) => (props.selected ? "blue" : "red")};
+`;
 
 interface IProps {
   navigation: StackNavigationProp<ParamListBase>;
 }
 
 const Movies: React.FC<IProps> = ({ navigation }) => (
-  <TouchableOpacity
-    onPress={() => navigation.navigate("Stack", { screen: "Three" })}
-    style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-  >
-    <Text>Movies</Text>
-  </TouchableOpacity>
+  <Container>
+    <Btn onPress={() => navigation.navigate("Stack", { screen: "Three" })}>
+      <Title selected={false}>Movies</Title>
+      <Title selected={true}>Movies</Title>
+    </Btn>
+  </Container>
 );
-
-const stylTouchableOpacitys = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: WHITE_COLOR,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
 
 export default Movies;

@@ -1,22 +1,31 @@
+import { ParamListBase } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import styled from "styled-components/native";
 import { WHITE_COLOR } from "../styles/colors";
 
-interface IProps {}
+interface IProps {
+  navigation: StackNavigationProp<ParamListBase>;
+}
+interface ISelected {
+  selected: string;
+}
 
-const Search: React.FC<IProps> = () => (
-  <View style={styles.container}>
-    <Text>Search</Text>
-  </View>
+const Container = styled.View`
+  flex: 1;
+  background-color: ${WHITE_COLOR};
+  justify-content: center;
+  align-items: center;
+`;
+
+const Title = styled.Text<ISelected>`
+  color: ${(props) => (props.selected ? "blue" : "red")};
+`;
+
+const Search: React.FC<IProps> = ({ navigation }) => (
+  <Container>
+    <Title>Search</Title>
+  </Container>
 );
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: WHITE_COLOR,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
 
 export default Search;
