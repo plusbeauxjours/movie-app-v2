@@ -1,6 +1,8 @@
 import React from "react";
-import { StyleSheet, useColorScheme, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+
 import styled from "styled-components/native";
+
 import { makeImgPath } from "../utils";
 import Poster from "./Poster";
 
@@ -36,7 +38,7 @@ const Votes = styled(Overview)`
   font-size: 12px;
 `;
 
-interface SlideProps {
+interface IProps {
   backdropPath: string;
   posterPath: string;
   originalTitle: string;
@@ -44,7 +46,7 @@ interface SlideProps {
   overview: string;
 }
 
-const Slide: React.FC<SlideProps> = ({
+const Slide: React.FC<IProps> = ({
   backdropPath,
   posterPath,
   originalTitle,

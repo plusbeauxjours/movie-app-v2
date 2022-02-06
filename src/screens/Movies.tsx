@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, View } from "react-native";
 
 import { useQuery } from "react-query";
 import styled from "styled-components/native";
@@ -7,9 +7,10 @@ import Swiper from "react-native-swiper";
 import { ParamListBase } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { moviesApi } from "../api";
+import { Movie, moviesApi } from "../api";
 import Slide from "../components/Slide";
-import Poster from "../components/Poster";
+import HMedia from "../components/HMedia";
+import VMedia from "../components/VMedia";
 
 interface IProps {
   navigation: StackNavigationProp<ParamListBase>;
@@ -33,25 +34,16 @@ const ListTitle = styled.Text`
   margin-left: 30px;
 `;
 
-const TrendingScroll = styled.ScrollView`
+const TrendingFlatList = styled.FlatList`
   margin-top: 20px;
 `;
 
-const Movie = styled.View`
-  margin-right: 20px;
-  align-items: center;
+const ListContainer = styled.View`
+  margin-bottom: 40px;
 `;
 
-const Title = styled.Text`
-  width: 100px;
-  color: ${(props) => props.theme.textColor};
-  font-weight: 600;
-  margin-top: 7px;
-  margin-bottom: 5px;
-`;
-const Votes = styled.Text`
-  color: ${(props) => props.theme.textColor};
-  font-size: 10px;
+const ComingSoonTitle = styled(ListTitle)`
+  margin-bottom: 30px;
 `;
 
 const Movies: React.FC<IProps> = ({ navigation }) => {
@@ -64,7 +56,11 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
     ["movies", "trending"],
     moviesApi.trending
   );
-  const loading = nowPlayingLoading || trendingLoading;
+  const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
+    ["movies", "upcoming"],
+    moviesApi.upcoming
+  );
+  const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
   return loading ? (
     <Loader />
   ) : (
@@ -77,7 +73,7 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
         showsButtons={false}
         showsPagination={false}
         containerStyle={{
-          marginBottom: 30,
+          marginBottom: 40,
           width: "100%",
           height: SCREEN_HEIGHT / 4,
         }}
@@ -93,20 +89,34 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
           />
         ))}
       </Swiper>
-      <ListTitle>Trending Movies</ListTitle>
-      <TrendingScroll
-        contentContainerStyle={{ paddingLeft: 30 }}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      >
-        {trendingData?.results.map((movie) => (
-          <Movie key={movie.id}>
-            <Poster path={movie.poster_path} />
-            <Title numberOfLines={1}>{movie.title}</Title>
-            <Votes>⭐️ {movie.vote_average}/10</Votes>
-          </Movie>
-        ))}
-      </TrendingScroll>
+      <ListContainer>
+        <ListTitle>Trending Movies</ListTitle>
+        <TrendingFlatList
+          data={trendingData?.results}
+          horizontal
+          keyExtractor={(item: any) => item.id + ""}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 30 }}
+          ItemSeparatorComponent={() => <View style={{ width: 30 }} />}
+          renderItem={({ item }: any) => (
+            <VMedia
+              posterPath={item.poster_path}
+              originalTitle={item.original_title}
+              voteAverage={item.vote_average}
+            />
+          )}
+        />
+      </ListContainer>
+      <ComingSoonTitle>Coming soon</ComingSoonTitle>
+      {upcomingData?.results.map((movie) => (
+        <HMedia
+          key={movie.id}
+          posterPath={movie.poster_path}
+          originalTitle={movie.original_title}
+          overview={movie.overview}
+          releaseDate={movie.release_date}
+        />
+      ))}
     </Container>
   );
 };
