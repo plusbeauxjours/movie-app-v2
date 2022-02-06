@@ -13,6 +13,7 @@ const Container = styled.View`
   background-color: ${WHITE_COLOR};
   justify-content: center;
   align-items: center;
+  background-color: ${(props) => props.theme.mainBgColor};
 `;
 
 const Btn = styled.TouchableOpacity`
@@ -22,7 +23,7 @@ const Btn = styled.TouchableOpacity`
 `;
 
 const Title = styled.Text<ISelected>`
-  color: ${(props) => (props.selected ? "blue" : "red")};
+  color: ${(props) => props.theme.textColor};
 `;
 
 interface IProps {
@@ -32,8 +33,7 @@ interface IProps {
 const Movies: React.FC<IProps> = ({ navigation }) => (
   <Container>
     <Btn onPress={() => navigation.navigate("Stack", { screen: "Three" })}>
-      <Title selected={false}>Movies</Title>
-      <Title selected={true}>Movies</Title>
+      <Title>Movies</Title>
     </Btn>
   </Container>
 );
