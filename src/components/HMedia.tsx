@@ -7,6 +7,7 @@ import styled from "styled-components/native";
 import Poster from "./Poster";
 import Votes from "./Votes";
 import { Routes } from "../navigation/Root";
+import { Movie } from "../api";
 
 const HMovie = styled.View`
   padding: 0px 30px;
@@ -45,6 +46,7 @@ interface IProps {
   overview: string;
   releaseDate?: string;
   voteAverage?: number;
+  data: Movie;
 }
 
 const HMedia: React.FC<IProps> = ({
@@ -53,10 +55,19 @@ const HMedia: React.FC<IProps> = ({
   overview,
   releaseDate,
   voteAverage,
+  data,
 }) => {
   const navigation = useNavigation();
   const goToDetail = () =>
-    navigation.navigate(Routes.Stack as never, { screen: "Detail" } as never);
+    navigation.navigate(
+      Routes.Stack as never,
+      {
+        screen: Routes.Detail,
+        params: {
+          ...data,
+        },
+      } as never
+    );
 
   return (
     <TouchableWithoutFeedback onPress={goToDetail}>

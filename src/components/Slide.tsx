@@ -6,6 +6,8 @@ import styled from "styled-components/native";
 
 import { makeImgPath } from "../utils";
 import Poster from "./Poster";
+import { Routes } from "../navigation/Root";
+import { Movie } from "../api";
 
 const BgImg = styled.Image`
   opacity: 0.8;
@@ -45,6 +47,7 @@ interface IProps {
   originalTitle: string;
   voteAverage: number;
   overview: string;
+  data: Movie;
 }
 
 const Slide: React.FC<IProps> = ({
@@ -53,10 +56,19 @@ const Slide: React.FC<IProps> = ({
   originalTitle,
   voteAverage,
   overview,
+  data,
 }) => {
   const navigation = useNavigation();
   const goToDetail = () =>
-    navigation.navigate(Routes.Stack as never, { screen: "Detail" } as never);
+    navigation.navigate(
+      Routes.Stack as never,
+      {
+        screen: Routes.Detail,
+        params: {
+          ...data,
+        },
+      } as never
+    );
 
   return (
     <TouchableWithoutFeedback onPress={goToDetail}>

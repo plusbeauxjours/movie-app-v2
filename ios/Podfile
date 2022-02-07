@@ -13,6 +13,8 @@ target 'movieApp' do
   )
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
 
   target 'movieAppTests' do
     inherit! :complete

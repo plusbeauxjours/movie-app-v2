@@ -7,8 +7,9 @@ import styled from "styled-components/native";
 import Poster from "./Poster";
 import Votes from "./Votes";
 import { Routes } from "../navigation/Root";
+import { Movie, TV } from "../api";
 
-const Movie = styled.View`
+const Container = styled.View`
   align-items: center;
 `;
 
@@ -24,24 +25,34 @@ interface IProps {
   posterPath: string;
   originalTitle: string;
   voteAverage: number;
+  data: Movie | TV;
 }
 
 const VMedia: React.FC<IProps> = ({
   posterPath,
   originalTitle,
   voteAverage,
+  data,
 }) => {
   const navigation = useNavigation();
   const goToDetail = () =>
-    navigation.navigate(Routes.Stack as never, { screen: "Detail" } as never);
+    navigation.navigate(
+      Routes.Stack as never,
+      {
+        screen: Routes.Detail,
+        params: {
+          ...data,
+        },
+      } as never
+    );
 
   return (
     <TouchableWithoutFeedback onPress={goToDetail}>
-      <Movie>
+      <Container>
         <Poster path={posterPath} />
         <Title numberOfLines={1}>{originalTitle}</Title>
         <Votes votes={voteAverage} />
-      </Movie>
+      </Container>
     </TouchableWithoutFeedback>
   );
 };

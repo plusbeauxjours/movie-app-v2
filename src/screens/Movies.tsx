@@ -62,18 +62,19 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
   };
 
   const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
-  const movieKeyExtractor = (item) => item.id + "";
+  const movieKeyExtractor = (item) => item?.id + "";
 
   const renderHMedia = useCallback(
     ({ item }) => (
       <HMedia
-        posterPath={item.poster_path}
-        originalTitle={item.original_title}
-        overview={item.overview}
-        releaseDate={item.release_date}
+        posterPath={item?.poster_path || ""}
+        originalTitle={item?.original_title || ""}
+        overview={item?.overview}
+        releaseDate={item?.release_date}
+        data={item}
       />
     ),
-    []
+    [upcomingData]
   );
 
   const ListHeaderComponent = useCallback(
@@ -95,11 +96,12 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
           {nowPlayingData?.results.map((movie) => (
             <Slide
               key={movie.id}
-              backdropPath={movie.backdrop_path}
-              posterPath={movie.poster_path}
+              backdropPath={movie.backdrop_path || ""}
+              posterPath={movie.poster_path || ""}
               originalTitle={movie.original_title}
               voteAverage={movie.vote_average}
               overview={movie.overview}
+              data={movie}
             />
           ))}
         </Swiper>
@@ -109,7 +111,7 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
         <ComingSoonTitle>Coming soon</ComingSoonTitle>
       </>
     ),
-    []
+    [nowPlayingData, trendingData]
   );
 
   return loading ? (

@@ -10,6 +10,7 @@ const Nav = createNativeStackNavigator();
 export const Routes = {
   Tabs: "Tabs",
   Stack: "Stack",
+  Detail: "Detail",
 };
 
 const Root = () => (
