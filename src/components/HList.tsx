@@ -12,6 +12,9 @@ interface IProps {
 
 const ListContainer = styled.View`
   margin-bottom: 40px;
+  flex: 1;
+  width: 100%
+  align-items: flex-start;
 `;
 
 const ListTitle = styled.Text`
