@@ -1,14 +1,21 @@
 import React, { useEffect } from "react";
-import { Dimensions, FlatList, StyleSheet, useColorScheme } from "react-native";
+import {
+  Dimensions,
+  Platform,
+  Share,
+  StyleSheet,
+  useColorScheme,
+} from "react-native";
 
 import styled from "styled-components/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import LinearGradient from "react-native-linear-gradient";
 
 import { makeImgPath } from "../utils";
 import Poster from "../components/Poster";
-import { BLACK_COLOR } from "../styles/colors";
+import { BLACK_COLOR, WHITE_COLOR } from "../styles/colors";
 import { MovieDetails, moviesApi, tvApi, TVDetails } from "../api";
 import { useQuery } from "react-query";
 import Loader from "../components/Loader";
@@ -32,10 +39,6 @@ const Header = styled.View`
 
 const Background = styled.Image``;
 
-const HSeparator = styled.View`
-  height: 20px;
-`;
-
 const Column = styled.View`
   flex-direction: row;
   width: 80%;
@@ -58,21 +61,71 @@ const Overview = styled.Text`
   padding: 20px;
 `;
 
+const Touchable = styled.TouchableOpacity``;
+
 const Detail: React.FC<IProps> = ({
   navigation: { setOptions },
   route: { params },
 }) => {
+  const isDark = useColorScheme() === "dark";
   const isMovie = "original_title" in params;
   const { isLoading, data } = useQuery<MovieDetails | TVDetails>(
     [isMovie ? "movies" : "tv", params.id],
     isMovie ? moviesApi.detail : tvApi.detail
   );
 
+  const shareMedia = async () => {
+    const isAndroid = Platform.OS === "android";
+    const homepage = isMovie
+      ? `https://www.imdb.com/title/${data?.imdb_id}/`
+      : data.homepage;
+    if (isAndroid) {
+      await Share.share({
+        message: `${params.overview}\nCheck it out: ${homepage}`,
+        title:
+          "original_title" in params
+            ? params.original_title
+            : params.original_name,
+      });
+    } else {
+      await Share.share({
+        url: homepage,
+        title:
+          "original_title" in params
+            ? params.original_title
+            : params.original_name,
+      });
+    }
+  };
+
+  const movieKeyExtractor = (item) => item?.id + "";
+
+  useEffect(() => {
+    if (data) {
+      setOptions({
+        headerRight: () => <ShareButton />,
+      });
+    }
+  }, [data]);
+
   useEffect(() => {
     setOptions({
-      title: "original_title" in params ? "Movie" : "TV Show",
+      title:
+        "original_title" in params
+          ? params.original_title
+          : params.original_name,
     });
   }, []);
+
+  const ShareButton = () => (
+    <Touchable onPress={shareMedia}>
+      <Ionicons
+        name="share-outline"
+        color={isDark ? WHITE_COLOR : BLACK_COLOR}
+        size={24}
+      />
+    </Touchable>
+  );
 
   return (
     <Container>
@@ -97,15 +150,13 @@ const Detail: React.FC<IProps> = ({
       <Overview>{params.overview}</Overview>
       <Data>
         {isLoading ? <Loader /> : null}
-        <FlatList
-          data={data?.videos?.results}
-          ItemSeparatorComponent={HSeparator}
-          renderItem={({ item }) =>
-            item.site === "YouTube" && (
-              <VideoPlayer videoId={item?.key} videoName={item?.name} />
-            )
-          }
-        />
+        {data?.videos?.results?.map((video) => (
+          <VideoPlayer
+            key={video?.key}
+            videoId={video?.key}
+            videoName={video?.name}
+          />
+        ))}
       </Data>
     </Container>
   );
