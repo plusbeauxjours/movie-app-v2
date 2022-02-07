@@ -75,35 +75,44 @@ const Detail: React.FC<IProps> = ({
   );
 
   const shareMedia = async () => {
-    const isAndroid = Platform.OS === "android";
-    const homepage = isMovie
-      ? `https://www.imdb.com/title/${data?.imdb_id}/`
-      : data.homepage;
-    if (isAndroid) {
-      await Share.share({
-        message: `${params.overview}\nCheck it out: ${homepage}`,
-        title:
-          "original_title" in params
-            ? params.original_title
-            : params.original_name,
-      });
-    } else {
-      await Share.share({
-        url: homepage,
-        title:
-          "original_title" in params
-            ? params.original_title
-            : params.original_name,
-      });
+    if (data) {
+      const isAndroid = Platform.OS === "android";
+      const homepage =
+        isMovie && "imdb_id" in data
+          ? `https://www.imdb.com/title/${data.imdb_id}/`
+          : data.homepage;
+      if (isAndroid) {
+        await Share.share({
+          message: `${params.overview}\nCheck it out: ${homepage}`,
+          title:
+            "original_title" in params
+              ? params.original_title
+              : params.original_name,
+        });
+      } else {
+        await Share.share({
+          url: homepage,
+          title:
+            "original_title" in params
+              ? params.original_title
+              : params.original_name,
+        });
+      }
     }
   };
-
-  const movieKeyExtractor = (item) => item?.id + "";
 
   useEffect(() => {
     if (data) {
       setOptions({
-        headerRight: () => <ShareButton />,
+        headerRight: () => (
+          <Touchable onPress={shareMedia}>
+            <Ionicons
+              name="share-outline"
+              color={isDark ? WHITE_COLOR : BLACK_COLOR}
+              size={24}
+            />
+          </Touchable>
+        ),
       });
     }
   }, [data]);
@@ -116,16 +125,6 @@ const Detail: React.FC<IProps> = ({
           : params.original_name,
     });
   }, []);
-
-  const ShareButton = () => (
-    <Touchable onPress={shareMedia}>
-      <Ionicons
-        name="share-outline"
-        color={isDark ? WHITE_COLOR : BLACK_COLOR}
-        size={24}
-      />
-    </Touchable>
-  );
 
   return (
     <Container>
