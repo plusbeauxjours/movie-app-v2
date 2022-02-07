@@ -7,7 +7,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { ParamListBase } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { moviesApi } from "../api";
+import { MovieResponse, moviesApi } from "../api";
 import Slide from "../components/Slide";
 import HMedia from "../components/HMedia";
 import HList from "../components/HList";
@@ -40,20 +40,14 @@ const Movies: React.FC<IProps> = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const queryClient = useQueryClient();
 
-  const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
-    ["movies", "nowPlaying"],
-    moviesApi.nowPlaying
-  );
+  const { isLoading: nowPlayingLoading, data: nowPlayingData } =
+    useQuery<MovieResponse>(["movies", "nowPlaying"], moviesApi.nowPlaying);
 
-  const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
-    ["movies", "upcoming"],
-    moviesApi.upcoming
-  );
+  const { isLoading: upcomingLoading, data: upcomingData } =
+    useQuery<MovieResponse>(["movies", "upcoming"], moviesApi.upcoming);
 
-  const { isLoading: trendingLoading, data: trendingData } = useQuery(
-    ["movies", "trending"],
-    moviesApi.trending
-  );
+  const { isLoading: trendingLoading, data: trendingData } =
+    useQuery<MovieResponse>(["movies", "trending"], moviesApi.trending);
 
   const onRefresh = async () => {
     setRefreshing(true);

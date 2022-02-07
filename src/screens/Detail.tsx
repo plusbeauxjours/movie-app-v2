@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, FlatList, StyleSheet, useColorScheme } from "react-native";
 
 import styled from "styled-components/native";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
@@ -9,6 +9,10 @@ import LinearGradient from "react-native-linear-gradient";
 import { makeImgPath } from "../utils";
 import Poster from "../components/Poster";
 import { BLACK_COLOR } from "../styles/colors";
+import { MovieDetails, moviesApi, tvApi, TVDetails } from "../api";
+import { useQuery } from "react-query";
+import Loader from "../components/Loader";
+import VideoPlayer from "../components/VideoPlayer";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 interface IProps {
@@ -23,10 +27,14 @@ const Container = styled.ScrollView`
 const Header = styled.View`
   height: ${SCREEN_HEIGHT / 4}px;
   justify-content: flex-end;
-  padding: 0px 20px;
+  padding: 20px;
 `;
 
 const Background = styled.Image``;
+
+const HSeparator = styled.View`
+  height: 20px;
+`;
 
 const Column = styled.View`
   flex-direction: row;
@@ -34,23 +42,32 @@ const Column = styled.View`
 `;
 
 const Title = styled.Text`
-  color: white;
+  color: ${(props) => props.theme.textColor};
   font-size: 36px;
   align-self: flex-end;
   margin-left: 15px;
   font-weight: 500;
 `;
 
+const Data = styled.View`
+  padding: 0px 20px;
+`;
+
 const Overview = styled.Text`
   color: ${(props) => props.theme.textColor};
-  margin-top: 20px;
-  padding: 0px 20px;
+  padding: 20px;
 `;
 
 const Detail: React.FC<IProps> = ({
   navigation: { setOptions },
   route: { params },
 }) => {
+  const isMovie = "original_title" in params;
+  const { isLoading, data } = useQuery<MovieDetails | TVDetails>(
+    [isMovie ? "movies" : "tv", params.id],
+    isMovie ? moviesApi.detail : tvApi.detail
+  );
+
   useEffect(() => {
     setOptions({
       title: "original_title" in params ? "Movie" : "TV Show",
@@ -78,6 +95,18 @@ const Detail: React.FC<IProps> = ({
         </Column>
       </Header>
       <Overview>{params.overview}</Overview>
+      <Data>
+        {isLoading ? <Loader /> : null}
+        <FlatList
+          data={data?.videos?.results}
+          ItemSeparatorComponent={HSeparator}
+          renderItem={({ item }) =>
+            item.site === "YouTube" && (
+              <VideoPlayer videoId={item?.key} videoName={item?.name} />
+            )
+          }
+        />
+      </Data>
     </Container>
   );
 };

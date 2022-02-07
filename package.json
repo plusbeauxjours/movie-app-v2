@@ -10,7 +10,6 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@react-native-community/blur": "3.6.0",
     "@react-native-community/masked-view": "0.1.11",
     "@react-navigation/bottom-tabs": "6.2.0",
     "@react-navigation/native": "6.0.8",
@@ -29,6 +28,8 @@
     "react-native-unimodules": "0.14.10",
     "react-native-vector-icons": "9.0.0",
     "react-native-web": "0.17.5",
+    "react-native-webview": "11.17.1",
+    "react-native-youtube-iframe": "2.2.2",
     "react-query": "3.34.13",
     "styled-components": "5.3.3",
     "yarn": "1.22.17"

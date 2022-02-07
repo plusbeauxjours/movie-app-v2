@@ -4,7 +4,9 @@ const API_KEY = "01da2a336a604956c260900d1835847f";
 const BASE_URL = "https://api.themoviedb.org/3";
 
 type MovieListResponse = QueryFunction<MovieResponse>;
+type MovieDetailResponse = QueryFunction<MovieDetails>;
 type TVListResponse = QueryFunction<TVResponse>;
+type TVDetailResponse = QueryFunction<TVDetails>;
 
 interface BaseResponse {
   page: number;
@@ -137,6 +139,7 @@ interface MovieFetchers {
   upcoming: MovieListResponse;
   nowPlaying: MovieListResponse;
   search: MovieListResponse;
+  detail: MovieDetailResponse;
 }
 
 interface TVFetchers {
@@ -144,6 +147,7 @@ interface TVFetchers {
   airingToday: TVListResponse;
   topRated: TVListResponse;
   search: TVListResponse;
+  detail: TVDetailResponse;
 }
 
 export const moviesApi: MovieFetchers = {
@@ -165,6 +169,12 @@ export const moviesApi: MovieFetchers = {
       `${BASE_URL}/search/movie?api_key=${API_KEY}&language=en-US&page=1&query=${query}`
     ).then((res) => res.json());
   },
+  detail: ({ queryKey }) => {
+    const [_, id] = queryKey;
+    return fetch(
+      `${BASE_URL}/movie/${id}?api_key=${API_KEY}&append_to_response=videos,images`
+    ).then((res) => res.json());
+  },
 };
 
 export const tvApi: TVFetchers = {
@@ -184,6 +194,12 @@ export const tvApi: TVFetchers = {
     const [_, query] = queryKey;
     return fetch(
       `${BASE_URL}/search/tv?api_key=${API_KEY}&language=en-US&page=1&query=${query}`
+    ).then((res) => res.json());
+  },
+  detail: ({ queryKey }) => {
+    const [_, id] = queryKey;
+    return fetch(
+      `${BASE_URL}/tv/${id}?api_key=${API_KEY}&append_to_response=videos,images`
     ).then((res) => res.json());
   },
 };

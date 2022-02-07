@@ -5,7 +5,7 @@ import { ParamListBase } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useQuery, useQueryClient } from "react-query";
 
-import { tvApi } from "../api";
+import { tvApi, TVResponse } from "../api";
 import Loader from "../components/Loader";
 import HList from "../components/HList";
 
@@ -17,20 +17,18 @@ const Tv: React.FC<IProps> = () => {
   const [refreshing, setRefreshing] = useState(false);
   const queryClient = useQueryClient();
 
-  const { isLoading: todayLoading, data: todayData } = useQuery(
+  const { isLoading: todayLoading, data: todayData } = useQuery<TVResponse>(
     ["tv", "today"],
     tvApi.airingToday
   );
 
-  const { isLoading: topLoading, data: topData } = useQuery(
+  const { isLoading: topLoading, data: topData } = useQuery<TVResponse>(
     ["tv", "top"],
     tvApi.topRated
   );
 
-  const { isLoading: trendingLoading, data: trendingData } = useQuery(
-    ["tv", "trending"],
-    tvApi.trending
-  );
+  const { isLoading: trendingLoading, data: trendingData } =
+    useQuery<TVResponse>(["tv", "trending"], tvApi.trending);
 
   const onRefresh = () => {
     setRefreshing(true);

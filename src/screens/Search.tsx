@@ -5,7 +5,7 @@ import styled from "styled-components/native";
 import { ParamListBase } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { moviesApi, tvApi } from "../api";
+import { MovieResponse, moviesApi, tvApi, TVResponse } from "../api";
 import HList from "../components/HList";
 import Loader from "../components/Loader";
 
@@ -36,7 +36,7 @@ const Search: React.FC<IProps> = ({ navigation }) => {
     isLoading: moviesLoading,
     data: moviesData,
     refetch: searchMovies,
-  } = useQuery(["searchMovies", query], moviesApi.search, {
+  } = useQuery<MovieResponse>(["searchMovies", query], moviesApi.search, {
     enabled: false,
   });
 
@@ -44,7 +44,7 @@ const Search: React.FC<IProps> = ({ navigation }) => {
     isLoading: tvLoading,
     data: tvData,
     refetch: searchTv,
-  } = useQuery(["searchTv", query], tvApi.search, {
+  } = useQuery<TVResponse>(["searchTv", query], tvApi.search, {
     enabled: false,
   });
 
